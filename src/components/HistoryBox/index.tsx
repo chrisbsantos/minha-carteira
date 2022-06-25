@@ -1,0 +1,74 @@
+import React from "react";
+import {
+    ResponsiveContainer,
+    LineChart,
+    Line,
+    XAxis,
+    CartesianGrid,
+    Tooltip
+} from 'recharts';
+
+import { formatCurrency } from "../../utils/helpers";
+
+import { Container, ChartContainer, Header, LegendContainer, Legend } from './styles'
+
+interface IHistoryBoxProps {
+    data: {
+        month: string;
+        amountGains: number;
+        amountExpenses: number;
+    }[];
+    lineColorAmountGains: string;
+    lineColorAmountExpenses: string;
+}
+
+const HistoryBox: React.FC<IHistoryBoxProps> = ({
+    data, lineColorAmountExpenses, lineColorAmountGains
+}) => {
+    return (
+        <Container>
+            <Header>
+                <h2>Histórico de Saldo</h2>
+                <LegendContainer>
+                    <Legend color={lineColorAmountGains}>
+                        <div></div>
+                        <span>Entradas</span>
+                    </Legend>
+                    <Legend color={lineColorAmountExpenses}>
+                        <div></div>
+                        <span>Saídas</span>
+                    </Legend>
+                </LegendContainer>
+            </Header>
+            <ChartContainer>
+                <ResponsiveContainer>
+                    <LineChart data={data} margin={{ top: 5, right: 20, left: 20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#cecece" />
+                        <XAxis dataKey="month" stroke="#cecece" />
+                        <Tooltip formatter={( value: number ) => formatCurrency(value)} />
+                        <Line 
+                            type="monotone"
+                            dataKey="amountGains"
+                            name="Entradas"
+                            stroke={lineColorAmountGains}
+                            strokeWidth={5}
+                            dot={{ r: 5 }}
+                            activeDot={{ r: 8 }}
+                        />
+                        <Line 
+                            type="monotone"
+                            dataKey="amountExpenses"
+                            name="Saídas"
+                            stroke={lineColorAmountExpenses}
+                            strokeWidth={5}
+                            dot={{ r: 5 }}
+                            activeDot={{ r: 8 }}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </ChartContainer>
+        </Container>
+    );
+}
+
+export default HistoryBox;
